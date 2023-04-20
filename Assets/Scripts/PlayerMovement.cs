@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
 
 /* Eugene van den berg
  * Created 15/04/2023
@@ -23,6 +22,11 @@ public class PlayerMovement : MonoBehaviour
     private bool sprinting = false;
     public Rigidbody player;
 
+    private void Awake()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
     public void OnMove(InputAction.CallbackContext context)
     {
         move = context.ReadValue<Vector2>();
@@ -35,11 +39,19 @@ public class PlayerMovement : MonoBehaviour
 
     public void OnSprint(InputAction.CallbackContext context)
     {
-        sprinting = context.ReadValue<bool>();
+        sprinting = context.performed;
     }
 
     void FixedUpdate()
     {
+        if (sprinting)
+        {
+            sprintSpeed = 2;
+        }
+        else
+        {
+            sprintSpeed = 1;
+        }
         movePlayer();
         lookPlayer();
     }
