@@ -610,9 +610,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 735a61622d2e4d341be0a3e7fbb57263, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  VirtualCamera: {fileID: 0}
   moveSpeed: 250
-  sprintSpeed: 3
   player: {fileID: 1390026196}
 --- !u!114 &1390026195
 MonoBehaviour:
