@@ -14,10 +14,8 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public CinemachineVirtualCamera VirtualCamera;
-
     public float moveSpeed;
-    public int sprintSpeed = 1;
+    private int sprintSpeed;
     private Vector2 move, look;
     private bool sprinting = false;
     public Rigidbody player;
