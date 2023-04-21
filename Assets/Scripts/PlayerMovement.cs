@@ -1,3 +1,4 @@
+
 using Cinemachine;
 using System;
 using System.Collections;
@@ -14,10 +15,12 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float moveSpeed;
-    private int sprintSpeed;
+    public float moveSpeed = 250;
+    public float jumpHight = 20;
+    public LayerMask Ground;
+
+    private int sprintSpeed = 1;
     private Vector2 move, look;
-    private bool sprinting = false;
     public Rigidbody player;
 
     private void Awake()
@@ -37,12 +40,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void OnSprint(InputAction.CallbackContext context)
     {
-        sprinting = context.performed;
-    }
-
-    void FixedUpdate()
-    {
-        if (sprinting)
+        if (context.performed)
         {
             sprintSpeed = 2;
         }
@@ -50,23 +48,40 @@ public class PlayerMovement : MonoBehaviour
         {
             sprintSpeed = 1;
         }
+    }
+
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            Jump();
+        }
+    }
+
+    void FixedUpdate()
+    {
         movePlayer();
         lookPlayer();
     }
 
-    public void movePlayer()
+    private void movePlayer()
     {
         Vector3 cameraForward = Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1)).normalized;
-        Vector3 movement = move.y * cameraForward + move.x * Camera.main.transform.right;
+        Vector3 movement = move.y * Camera.main.transform.forward + move.x * Camera.main.transform.right;
 
-        player.velocity = movement * moveSpeed * sprintSpeed * Time.fixedDeltaTime;
-
+        //Gravity not working
         transform.rotation = Quaternion.LookRotation(cameraForward.normalized, Vector3.up);
+        player.velocity = movement * moveSpeed * sprintSpeed * Time.fixedDeltaTime;
     }
 
-    public void lookPlayer()
+    private void lookPlayer()
     {
         this.transform.Rotate(Vector3.up, look.x);
+    }
+
+    private void Jump()
+    {
+        player.AddForce(Vector3.up * jumpHight,ForceMode.Impulse);
     }
 
     #region What I've learned
