@@ -20,7 +20,8 @@ public class PlayerMovement : MonoBehaviour
     public LayerMask Ground;
 
     private int sprintSpeed = 1;
-    private Vector2 move, look;
+    private Vector3 move;
+    private Vector2 look;
     public Rigidbody player;
 
     private void Awake()
@@ -69,9 +70,9 @@ public class PlayerMovement : MonoBehaviour
         Vector3 cameraForward = Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1)).normalized;
         Vector3 movement = move.y * Camera.main.transform.forward + move.x * Camera.main.transform.right;
 
-        //Gravity not working
         transform.rotation = Quaternion.LookRotation(cameraForward.normalized, Vector3.up);
-        player.velocity = movement * moveSpeed * sprintSpeed * Time.fixedDeltaTime;
+        var newMove = movement * moveSpeed * sprintSpeed * Time.fixedDeltaTime;
+        player.velocity = new Vector3(newMove.x, player.velocity.y, newMove.z);
     }
 
     private void lookPlayer()
@@ -84,9 +85,7 @@ public class PlayerMovement : MonoBehaviour
         player.AddForce(Vector3.up * jumpHight,ForceMode.Impulse);
     }
 
-    #region What I've learned
     /* Vector3.Scale. takes two vectors and multiplies it with each other to get a new vector
      * Quaternion.LookRotation transform the players rotation the the absolute of the camera
      */
-    #endregion
 }
