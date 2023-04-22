@@ -7,17 +7,17 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-/* Eugene van den berg
+/* Eugene van den berg, Mikyle Roets
  * Created 15/04/2023
- * Updated 20/04/2023
- * Version: 0
+ * Updated 22/04/2023
+ * Version: 0.1
  */
 
 public class PlayerMovement : MonoBehaviour
 {
     public float moveSpeed = 250;
     public float jumpHight = 20;
-    public LayerMask Ground;
+    public bool grounded;
 
     private int sprintSpeed = 1;
     private Vector3 move;
@@ -61,21 +61,23 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        movePlayer();
-        lookPlayer();
+        MovePlayer();
+        LookPlayer();
     }
 
-    private void movePlayer()
+    private void MovePlayer()
     {
         Vector3 cameraForward = Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1)).normalized;
         Vector3 movement = move.y * Camera.main.transform.forward + move.x * Camera.main.transform.right;
+        movement.y = 0;
+        movement.Normalize();
 
         transform.rotation = Quaternion.LookRotation(cameraForward.normalized, Vector3.up);
         var newMove = movement * moveSpeed * sprintSpeed * Time.fixedDeltaTime;
         player.velocity = new Vector3(newMove.x, player.velocity.y, newMove.z);
     }
 
-    private void lookPlayer()
+    private void LookPlayer()
     {
         this.transform.Rotate(Vector3.up, look.x);
     }
@@ -83,9 +85,6 @@ public class PlayerMovement : MonoBehaviour
     private void Jump()
     {
         player.AddForce(Vector3.up * jumpHight,ForceMode.Impulse);
-    }
 
-    /* Vector3.Scale. takes two vectors and multiplies it with each other to get a new vector
-     * Quaternion.LookRotation transform the players rotation the the absolute of the camera
-     */
+    }
 }
