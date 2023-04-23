@@ -3,27 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+/* Eugene van den berg
+ * Created 23/04/2023
+ * Updated 23/04/2023
+*/
+
 public class Interactor : MonoBehaviour
 {
     [SerializeField] private Transform interactionPoint;
     [SerializeField] private float interactRadius = 05f;
     [SerializeField] private LayerMask interactionMask;
 
-    private readonly Collider[] colliders = new Collider[3];
-    [SerializeField] private int numFound;
-    
-    private void Update()
-    {
-        numFound = Physics.OverlapSphereNonAlloc(interactionPoint.position, interactRadius, colliders, interactionMask);
+    private readonly Collider colliders;
 
-        if(numFound > 0)
-        {
-            var interactable = colliders[0].GetComponent<Interactable>();
-            if(interactable != null && Keyboard.current.eKey.wasPressedThisFrame)
-            {
-                interactable.Interact(this);
-            }
-        }
+    public void OnInteraction(InputAction.CallbackContext context)
+    {
+        var interactable = colliders.GetComponent<Interactable>();
+        interactable?.Interact(this);
     }
 
     private void OnDrawGizmos()
@@ -31,5 +27,4 @@ public class Interactor : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(interactionPoint.position, interactRadius);
     }
-
 }
